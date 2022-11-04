@@ -109,7 +109,7 @@
           <div class="aritcle-copyright">
             <div>
               <span>起售价：</span>
-              <em class="price">200￥</em>
+              <em class="price">{{ article.price }}￥</em>
             </div>
 
             <div>
@@ -123,7 +123,7 @@
               <a :href="articleHref" target="_blank">{{ articleHref }} </a>
             </div>
             <div>
-              <span>版权声明：</span>本博客所有文章除特别声明外，均采用
+              <span>版权声明：</span>本网站所有文章除特别声明外，均采用
               <a
                       href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
                       target="_blank"
@@ -182,7 +182,7 @@
               </div>
             </a>
 
-            <a :class="isLike" @click="cart">
+            <a :class="isCart" @click="cart">
               <svg-icon icon-class="cart"/> 加入购物车
             </a>
 
@@ -318,17 +318,13 @@
         let str = this.$route.path;
         let newStr = str.split("/")
         let res = await getArticle(newStr[newStr.length - 1]);
-        console.log("articleInfo", res)
-
-          // this.wordNum = 20
-          // console.log(this.wordNum)
+        console.log("res wait", res)
           document.title = res.data.article.articleTitle;
           //将markdown转换为Html
           this.markdownToHtml(res.data.article);
           // this.$nextTick(() => {
             // 统计文章字数
             this.wordNum = this.deleteHTMLTag(this.article.articleContent).length;
-            console.log("this.wordNum=", this.wordNum)
             // 计算阅读时间
             this.readTime = Math.round(this.wordNum / 400) + "分钟";
             // 添加代码复制功能
@@ -377,7 +373,6 @@
           email: this.$store.state.email,
           totalFee: 200,
         };
-        console.log("params", params)
 
         this.axios.post("http://localhost:8003/wechat/core/createOrder", params).then(res => {
           if (res.data.code === 200){
@@ -399,7 +394,6 @@
         const path = this.$route.path;
         const arr = path.split("/");
         const articleId = arr[arr.length - 1];
-        console.log("dataArticle", articleId);
         getComments({ current: 1, articleId: articleId }).then(res => {
           this.commentList = res.data.comment;
           this.count = res.data.comment.length;
@@ -412,8 +406,8 @@
           return false;
         }
         //发送点赞请求
-        addLike(this.article.id).then(res => {
-          if (res.flag) {
+        addLike(this.article.id, this.$store.state.userId).then(res => {
+          if (res.code === 200) {
             //判断是否点赞
             if (this.$store.state.articleLikeSet.indexOf(this.article.id) !== -1) {
               this.$set(this.article, "likeCount", this.article.likeCount - 1);
@@ -506,6 +500,9 @@
         return articleLikeSet.indexOf(this.article.id) !== -1
                 ? "like-btn-active"
                 : "like-btn";
+      },
+      isCart() {
+        return "like-btn";
       },
       isFull() {
         return function(id) {

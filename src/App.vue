@@ -70,7 +70,7 @@ export default {
     // 获取博客信息
     this.getBlogInfo();
     // 上传访客信息
-    // this.axios.post("/api/report");
+    this.axios.post("/api/websiteConfig/core/guest");
   },
   methods: {
     async getBlogInfo() {

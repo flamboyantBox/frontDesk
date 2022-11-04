@@ -204,8 +204,6 @@ export default {
       window.fullWidth = document.documentElement.clientWidth;
       that.screenHeight = window.fullHeight; // 高
       that.screenWidth = window.fullWidth; // 宽
-      // console.log("实时屏幕高度：", that.screenHeight);
-      // console.log("实时屏幕宽度：", that.screenWidth);
       if (that.screenWidth > 760) {
         that.hideScroll = true
       } else {

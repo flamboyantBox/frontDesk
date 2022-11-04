@@ -34,9 +34,9 @@ export function getComments(query) {
 }
 
 // 给文章点赞
-export function addLike(articleId) {
+export function addLike(articleId, userId) {
     return service({
-        url: "/articles/"+articleId+"/like",
+        url: "/article/core/"+userId+"/"+articleId+"/like",
         method: 'post',
     })
 }
