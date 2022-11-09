@@ -109,7 +109,8 @@
           <div class="aritcle-copyright">
             <div>
               <span>起售价：</span>
-              <em class="price">{{ article.price }}￥</em>
+              <em class="price" v-if="article.price !== 0">{{ article.price }}￥</em>
+              <em class="price" v-else>仅供欣赏(非卖品)</em>
             </div>
 
             <div>
@@ -182,7 +183,7 @@
               </div>
             </a>
 
-            <a :class="isCart" @click="cart">
+            <a :class="isCart" v-if="article.price !== 0" @click="cart">
               <svg-icon icon-class="cart"/> 加入购物车
             </a>
 
@@ -319,49 +320,47 @@
         let newStr = str.split("/")
         let res = await getArticle(newStr[newStr.length - 1]);
         console.log("res wait", res)
-          document.title = res.data.article.articleTitle;
-          //将markdown转换为Html
-          this.markdownToHtml(res.data.article);
-          // this.$nextTick(() => {
-            // 统计文章字数
-            this.wordNum = this.deleteHTMLTag(this.article.articleContent).length;
-            // 计算阅读时间
-            this.readTime = Math.round(this.wordNum / 400) + "分钟";
-            // 添加代码复制功能
-            this.clipboard = new Clipboard(".copy-btn");
-            this.clipboard.on("success", () => {
-              this.$toast({ type: "success", message: "复制成功" });
-            // });
-            // 添加文章生成目录功能
-            let nodes = this.$refs.article.children;
-            if (nodes.length) {
-              for (let i = 0; i < nodes.length; i++) {
-                let node = nodes[i];
-                let reg = /^H[1-4]{1}$/;
-                if (reg.exec(node.tagName)) {
-                  node.id = i;
-                }
+        document.title = res.data.article.articleTitle;
+        //将markdown转换为Html
+        this.markdownToHtml(res.data.article);
+        this.$nextTick(() => {
+          // 统计文章字数
+          this.wordNum = this.deleteHTMLTag(this.article.articleContent).length;
+          // 计算阅读时间
+          this.readTime = Math.round(this.wordNum / 400) + "分钟";
+          // 添加代码复制功能
+          this.clipboard = new Clipboard(".copy-btn");
+          this.clipboard.on("success", () => {this.$toast({type: "success", message: "复制成功"});
+          // 添加文章生成目录功能
+          let nodes = this.$refs.article.children;
+          if (nodes.length) {
+            for (let i = 0; i < nodes.length; i++) {
+              let node = nodes[i];
+              let reg = /^H[1-4]{1}$/;
+              if (reg.exec(node.tagName)) {
+                node.id = i;
               }
             }
-            tocbot.init({
-              tocSelector: "#toc", //要把目录添加元素位置，支持选择器
-              contentSelector: ".article-content", //获取html的元素
-              headingSelector: "h1, h2, h3", //要显示的id的目录
-              hasInnerContainers: true,
-              onClick: function(e) {
-                e.preventDefault();
-              }
-            });
-            // 添加图片预览功能
-            const imgList = this.$refs.article.getElementsByTagName("img");
-            for (var i = 0; i < imgList.length; i++) {
-              this.imgList.push(imgList[i].src);
-              imgList[i].addEventListener("click", function(e) {
-                that.previewImg(e.target.currentSrc);
-              });
+          }
+          tocbot.init({
+            tocSelector: "#toc", //要把目录添加元素位置，支持选择器
+            contentSelector: ".article-content", //获取html的元素
+            headingSelector: "h1, h2, h3", //要显示的id的目录
+            hasInnerContainers: true,
+            onClick: function (e) {
+              e.preventDefault();
             }
           });
-
+          // 添加图片预览功能
+          const imgList = this.$refs.article.getElementsByTagName("img");
+          for (var i = 0; i < imgList.length; i++) {
+            this.imgList.push(imgList[i].src);
+            imgList[i].addEventListener("click", function (e) {
+              that.previewImg(e.target.currentSrc);
+            });
+          }
+        });
+      })
       },
       cart(){
         let params = {

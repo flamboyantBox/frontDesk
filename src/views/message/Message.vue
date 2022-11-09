@@ -10,7 +10,7 @@
             v-model="messageContent"
             @click="show = true"
             @keyup.enter="addToList"
-            placeholder="说点什么吧"
+            placeholder="请输入留言信息"
           />
           <button
             class="ml-3 animated bounceInLeft"
@@ -80,8 +80,8 @@ export default {
     },
     listMessage() {
       getMessages().then(res => {
-        if (res.flag) {
-          this.barrageList = res.data;
+        if (res.code === 200) {
+          this.barrageList = res.data.messageList;
         }
       });
     }
@@ -92,7 +92,6 @@ export default {
       this.$store.state.blogInfo.pageList.forEach(item => {
         if (item.pageLabel === "message") {
           cover = item.pageCover;
-          console.log(cover)
         }
       });
       return "background: url(" + cover + ") center center / cover no-repeat";
@@ -112,7 +111,7 @@ export default {
   animation: header-effect 1s;
 }
 .message-title {
-  color: #eee;
+  color: #49b1f5;
   animation: title-scale 1s;
 }
 .message-container {
@@ -131,6 +130,7 @@ export default {
   justify-content: center;
   height: 2.5rem;
   margin-top: 2rem;
+  color: #00AAEE;
 }
 .message-input-wrapper input {
   outline: none;
@@ -138,18 +138,18 @@ export default {
   border-radius: 20px;
   height: 100%;
   padding: 0 1.25rem;
-  color: #eee;
-  border: #fff 1px solid;
+  color: #00AAEE;
+  border: #00AAEE 1px solid;
 }
 .message-input-wrapper input::-webkit-input-placeholder {
-  color: #eeee;
+  color: #00AAEE;
 }
 .message-input-wrapper button {
   outline: none;
   border-radius: 20px;
   height: 100%;
   padding: 0 1.25rem;
-  border: #fff 1px solid;
+  border: #00AAEE 1px solid;
 }
 .barrage-container {
   position: absolute;
