@@ -20,7 +20,7 @@ export function getLinks() {
 // 保存留言
 export function saveMessage(data) {
     return service({
-        url: "/messages",
+        url: "/message/core/addMessage",
         method: "post",
         data: data
     })
@@ -29,7 +29,7 @@ export function saveMessage(data) {
 // 获取留言列表
 export function getMessages() {
     return service({
-        url: "/messages",
+        url: "/message/core/messageList",
         method: "get"
     })
 }
