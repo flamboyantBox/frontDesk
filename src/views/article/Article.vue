@@ -363,6 +363,12 @@
       })
       },
       cart(){
+        // 判断是否登录
+        if (!this.$store.state.userId) {
+          this.$store.state.loginFlag = true;
+          return false;
+        }
+
         let params = {
           articleId: this.article.id,
           articleTitle: this.article.articleTitle,

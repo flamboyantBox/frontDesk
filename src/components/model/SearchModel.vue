@@ -75,13 +75,9 @@ export default {
   watch: {
     keywords(value) {
       this.flag = value.trim() != "" ? true : false;
-      this.axios
-        .get("/api/articles/search", {
-          params: { current: 1, keywords: value }
-        })
-        .then(({ data }) => {
-          this.articleList = data.data;
-        });
+      this.axios.get("/api/article/core/search", {params: { current: 1, keywords: value }}).then(({ data }) => {
+          this.articleList = data.data.data;
+      });
     }
   }
 };
